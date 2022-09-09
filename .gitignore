@@ -1,0 +1,36 @@
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+*.la
+*.lo
+
+# Shared objects (inc. Windows DLLs)
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.app
+*.i*86
+*.x86_64
+
+
+# Debug files
+*.dSYM/
+*.su
+/Debug/*
+
+# touchgfx
+/generated
+/build/Debug/obj
+/build/MINGW32_NT-6.2
+/simulator/msvs/.vs
+/Debug/
