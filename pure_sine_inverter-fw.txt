@@ -1,17 +1,17 @@
 Configuration	pure_sine_inverter-fw
 STM32CubeMX 	6.6.1
-Date	09/26/2022
+Date	11/29/2022
 MCU	STM32G474RETx
 
 
 
 PERIPHERALS	MODES	FUNCTIONS	PINS
-ADC1	IN1 Differential	ADC1_IN1	PA0
-ADC1	IN1 Differential	ADC1_IN2	PA1
-ADC1	IN3 Differential	ADC1_IN3	PA2
-ADC1	IN3 Differential	ADC1_IN4	PA3
-ADC1	IN8 Differential	ADC1_IN8	PC2
-ADC1	IN8 Differential	ADC1_IN9	PC3
+ADC1	IN1 Single-ended	ADC1_IN1	PA0
+ADC1	IN2 Single-ended	ADC1_IN2	PA1
+ADC1	IN3 Single-ended	ADC1_IN3	PA2
+ADC1	IN4 Single-ended	ADC1_IN4	PA3
+ADC1	IN8 Single-ended	ADC1_IN8	PC2
+ADC1	IN9 Single-ended	ADC1_IN9	PC3
 RCC	Crystal/Ceramic Resonator	RCC_OSC_IN	PF0-OSC_IN
 RCC	Crystal/Ceramic Resonator	RCC_OSC_OUT	PF1-OSC_OUT
 SPI1	Transmit Only Master	SPI1_MOSI	PA7
@@ -21,12 +21,15 @@ SYS	Trace Asynchronous Sw	SYS_JTCK-SWCLK	PA14
 SYS	Trace Asynchronous Sw	SYS_JTDO-SWO	PB3
 SYS	SysTick	SYS_VS_Systick	VP_SYS_VS_Systick
 SYS	Dead Battery Signals disabled	SYS_VS_DBSignals	VP_SYS_VS_DBSignals
+TIM1	Internal Clock	TIM1_VS_ClockSourceINT	VP_TIM1_VS_ClockSourceINT
 TIM1	PWM Generation CH1 CH1N	TIM1_CH1	PA8
 TIM1	PWM Generation CH1 CH1N	TIM1_CH1N	PB13
 TIM1	PWM Generation CH2 CH2N	TIM1_CH2	PA9
 TIM1	PWM Generation CH2 CH2N	TIM1_CH2N	PB14
+TIM3	Internal Clock	TIM3_VS_ClockSourceINT	VP_TIM3_VS_ClockSourceINT
 TIM3	PWM Generation CH1	TIM3_CH1	PC6
-TIM3	PWM Generation CH2	TIM3_CH2	PC7
+TIM4	Internal Clock	TIM4_VS_ClockSourceINT	VP_TIM4_VS_ClockSourceINT
+TIM4	Output Compare No Output	TIM4_VS_no_output1	VP_TIM4_VS_no_output1
 USART1	Asynchronous	USART1_RX	PB7
 USART1	Asynchronous	USART1_TX	PB6
 
@@ -37,7 +40,7 @@ Pin Nb	PINs	FUNCTIONs	LABELs
 5	PF0-OSC_IN	RCC_OSC_IN	
 6	PF1-OSC_OUT	RCC_OSC_OUT	
 10	PC2	ADC1_IN8	NTC_LOW[ADC1_IN8]
-11	PC3	ADC1_IN9	NTC_HIGH[ADC_IN9]
+11	PC3	ADC1_IN9	NTC_HIGH[ADC1_IN9]
 12	PA0	ADC1_IN1	BAT_VOLT[ADC1_IN1]
 13	PA1	ADC1_IN2	BAT_CURR[ADC1_IN2]
 14	PA2	ADC1_IN3	PWR_VOLT[ADC1_IN3]
@@ -50,7 +53,7 @@ Pin Nb	PINs	FUNCTIONs	LABELs
 35	PB13	TIM1_CH1N	
 36	PB14	TIM1_CH2N	
 38	PC6	TIM3_CH1	FAN
-39	PC7	TIM3_CH2	BUZZER
+39	PC7	GPIO_Output	BUZZER
 42	PA8	TIM1_CH1	
 43	PA9	TIM1_CH2	
 49	PA13	SYS_JTMS-SWDIO	
@@ -59,12 +62,12 @@ Pin Nb	PINs	FUNCTIONs	LABELs
 59	PB6	USART1_TX	
 60	PB7	USART1_RX	
 PERIPHERALS	MODES	FUNCTIONS	PINS
-ADC1	IN1 Differential	ADC1_IN1	PA0
-ADC1	IN1 Differential	ADC1_IN2	PA1
-ADC1	IN3 Differential	ADC1_IN3	PA2
-ADC1	IN3 Differential	ADC1_IN4	PA3
-ADC1	IN8 Differential	ADC1_IN8	PC2
-ADC1	IN8 Differential	ADC1_IN9	PC3
+ADC1	IN1 Single-ended	ADC1_IN1	PA0
+ADC1	IN2 Single-ended	ADC1_IN2	PA1
+ADC1	IN3 Single-ended	ADC1_IN3	PA2
+ADC1	IN4 Single-ended	ADC1_IN4	PA3
+ADC1	IN8 Single-ended	ADC1_IN8	PC2
+ADC1	IN9 Single-ended	ADC1_IN9	PC3
 RCC	Crystal/Ceramic Resonator	RCC_OSC_IN	PF0-OSC_IN
 RCC	Crystal/Ceramic Resonator	RCC_OSC_OUT	PF1-OSC_OUT
 SPI1	Transmit Only Master	SPI1_MOSI	PA7
@@ -74,12 +77,15 @@ SYS	Trace Asynchronous Sw	SYS_JTCK-SWCLK	PA14
 SYS	Trace Asynchronous Sw	SYS_JTDO-SWO	PB3
 SYS	SysTick	SYS_VS_Systick	VP_SYS_VS_Systick
 SYS	Dead Battery Signals disabled	SYS_VS_DBSignals	VP_SYS_VS_DBSignals
+TIM1	Internal Clock	TIM1_VS_ClockSourceINT	VP_TIM1_VS_ClockSourceINT
 TIM1	PWM Generation CH1 CH1N	TIM1_CH1	PA8
 TIM1	PWM Generation CH1 CH1N	TIM1_CH1N	PB13
 TIM1	PWM Generation CH2 CH2N	TIM1_CH2	PA9
 TIM1	PWM Generation CH2 CH2N	TIM1_CH2N	PB14
+TIM3	Internal Clock	TIM3_VS_ClockSourceINT	VP_TIM3_VS_ClockSourceINT
 TIM3	PWM Generation CH1	TIM3_CH1	PC6
-TIM3	PWM Generation CH2	TIM3_CH2	PC7
+TIM4	Internal Clock	TIM4_VS_ClockSourceINT	VP_TIM4_VS_ClockSourceINT
+TIM4	Output Compare No Output	TIM4_VS_no_output1	VP_TIM4_VS_no_output1
 USART1	Asynchronous	USART1_RX	PB7
 USART1	Asynchronous	USART1_TX	PB6
 
@@ -90,7 +96,7 @@ Pin Nb	PINs	FUNCTIONs	LABELs
 5	PF0-OSC_IN	RCC_OSC_IN	
 6	PF1-OSC_OUT	RCC_OSC_OUT	
 10	PC2	ADC1_IN8	NTC_LOW[ADC1_IN8]
-11	PC3	ADC1_IN9	NTC_HIGH[ADC_IN9]
+11	PC3	ADC1_IN9	NTC_HIGH[ADC1_IN9]
 12	PA0	ADC1_IN1	BAT_VOLT[ADC1_IN1]
 13	PA1	ADC1_IN2	BAT_CURR[ADC1_IN2]
 14	PA2	ADC1_IN3	PWR_VOLT[ADC1_IN3]
@@ -103,7 +109,7 @@ Pin Nb	PINs	FUNCTIONs	LABELs
 35	PB13	TIM1_CH1N	
 36	PB14	TIM1_CH2N	
 38	PC6	TIM3_CH1	FAN
-39	PC7	TIM3_CH2	BUZZER
+39	PC7	GPIO_Output	BUZZER
 42	PA8	TIM1_CH1	
 43	PA9	TIM1_CH2	
 49	PA13	SYS_JTMS-SWDIO	
@@ -118,14 +124,14 @@ SOFTWARE PROJECT
 
 Project Settings : 
 Project Name : pure_sine_inverter-fw
-Project Folder : D:\work\college\pure_sine_inverter-fw
-Toolchain / IDE : EWARM V8.50
+Project Folder : C:\dev\personal\pure_sine_inverter-fw
+Toolchain / IDE : STM32CubeIDE
 Firmware Package Name and Version : STM32Cube FW_G4 V1.5.1
 
 
 Code Generation Settings : 
-STM32Cube MCU packages and embedded software packs : Copy all used libraries into the project folder
-Generate peripheral initialization as a pair of '.c/.h' files per peripheral : No
+STM32Cube MCU packages and embedded software packs : Copy only the necessary library files
+Generate peripheral initialization as a pair of '.c/.h' files per peripheral : Yes
 Backup previously generated files when re-generating : No
 Delete previously generated files when not re-generated : Yes
 Set all free pins as analog (to optimize the power consumption) : No
