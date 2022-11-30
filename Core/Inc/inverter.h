@@ -1,5 +1,5 @@
 /*******************************************************************************
- * @file display.h
+ * @file inverter.c
  * @brief Describe here the main function...
  *
  * Designed by Heimdall
@@ -11,17 +11,17 @@
  *    |___|_| \_|  \_/  |_____|_| \_\|_| |_____|_| \_\
  *
  *
- *     ____ ___ ____  ____  _        _ __   __
- *    |  _ |_ _/ ___||  _ \| |      / \\ \ / /
- *    | | | | |\___ \| |_) | |     / _ \\ V /
- *    | |_| | | ___) |  __/| |___ / ___ \| |
- *    |____|___|____/|_|   |_____/_/   \_|_|
+ *     ____   ____        _    ____   ____
+ *    |  _ \ / ___|      / \  |  _ \ / ___|
+ *    | | | | |   _____ / _ \ | | | | |
+ *    | |_| | |__|_____/ ___ \| |_| | |___
+ *    |____/ \____|   /_/   \_|____/ \____|
  *
  ******************************************************************************/
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef INC_DISPLAY_H_
-#define INC_DISPLAY_H_
+#ifndef INC_INVERTER_H_
+#define INC_INVERTER_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -31,7 +31,10 @@ extern "C" {
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
-#include "st7789.h"
+#include "main.h"
+#include "dma.h"
+#include "tim.h"
+
 /* Exported constants --------------------------------------------------------*/
 
 /* Exported macro ------------------------------------------------------------*/
@@ -40,15 +43,12 @@ extern "C" {
 
 /* Exported prototypes -------------------------------------------------------*/
 
-void display_init(void);
-void display_run(void);
-void display_update(void);
-void display_write_header(void);
-void display_write_volt(void);
-void display_write_curr(void);
-void display_write_state(void);
-void display_write_err(void);
+void inverter_init(void);
+void inverter_run(void);
+void inverter_start(void);
+void inverter_stop(void);
+void inverter_err(void);
 
-#endif /* INC_DISPLAY_H_ */
+#endif /* INC_INVERTER_H_ */
 
 /************************ (C) COPYRIGHT Heimdall *****************END OF FILE****/

@@ -23,6 +23,8 @@
 
 #include "pwr.h"
 #include "adc.h"
+#include "inverter.h"
+
 
 /* Private defines------------------------------------------------------------*/
 
@@ -119,8 +121,11 @@ bool pwr_init(void)
 
 	if(pwr_get_gate_driver_state())
 	{
-		/* Initialize inverter */
+		/* set inverter state flag on */
 		hinv.inv_state = inv_pwr_ok;
+
+		/* start inverter */
+		inverter_start();
 		return hinv.inv_state;
 	}
 

@@ -72,7 +72,6 @@ void display_init(void)
 	display_write_curr();
 	display_write_state();
 
-
 }
 
 /**
@@ -165,6 +164,21 @@ void display_write_state(void)
 	{
 		ST7789_WriteString(24, 170, "INVERTER ON ", Font_16x26, GREEN, BLACK);
 	}
+}
+
+/**
+ * @brief build error display screen.
+ *
+ * @return none.
+ */
+void display_write_err(void)
+{
+
+	ST7789_Fill_Color(BLACK);
+	ST7789_WriteString(8, 107, "INVERTER ERROR", Font_16x26, RED, BLACK);
+	HAL_Delay(500);
+
+
 }
 
 /************************ (C) COPYRIGHT Heimdall *****************END OF FILE****/
