@@ -21,7 +21,10 @@
 #include "adc.h"
 
 /* USER CODE BEGIN 0 */
+#include "pwr.h"
+#include <string.h>
 
+uint16_t  adcbuffer[ADC_BUFFER_SIZE] = {0x00};
 /* USER CODE END 0 */
 
 ADC_HandleTypeDef hadc1;
@@ -132,6 +135,12 @@ void MX_ADC1_Init(void)
   }
   /* USER CODE BEGIN ADC1_Init 2 */
 
+	/* ADC Calibration */
+	HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED);
+
+	/* Clear buffer */
+	memset((void*) adcbuffer, 0x00, sizeof(adcbuffer));
+
   /* USER CODE END ADC1_Init 2 */
 
 }
@@ -235,5 +244,20 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle)
 }
 
 /* USER CODE BEGIN 1 */
+
+
+void adc_init(void)
+{
+	/* Start DMA peripheral to memory */
+	HAL_ADC_Start_DMA(&hadc1, (uint32_t*) adcbuffer, sizeof(adcbuffer) / sizeof(uint16_t));
+
+}
+
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* adc)
+{
+	pwr_adc_update(adcbuffer);
+}
+
+
 
 /* USER CODE END 1 */
