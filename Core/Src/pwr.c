@@ -225,6 +225,37 @@ bool pwr_get_gate_driver_state(void)
 	}
 }
 
+/**
+ * @brief gets the current state of the inverter.
+ *
+ * @return inverter state.
+ */
+bool pwr_get_state(void)
+{
+	return hinv.inv_state;
+}
+
+/**
+ * @brief gets the current value of power out voltage level.
+ *
+ * @return power out voltage level.
+ */
+float pwr_get_volt(void)
+{
+	return hinv.pwr_volt;
+}
+
+
+/**
+ * @brief gets the current value of power out current level.
+ *
+ * @return power out current level.
+ */
+float pwr_get_curr(void)
+{
+	return hinv.pwr_curr;
+}
+
 
 /**
  * @brief update adc buffer for inverter power.

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * @file pwr.h
+ * @file display.h
  * @brief Describe here the main function...
  *
  * Designed by Heimdall
@@ -11,17 +11,17 @@
  *    |___|_| \_|  \_/  |_____|_| \_\|_| |_____|_| \_\
  *
  *
- *     ______        ______
- *    |  _ \ \      / |  _ \
- *    | |_) \ \ /\ / /| |_) |
- *    |  __/ \ V  V / |  _ <
- *    |_|     \_/\_/  |_| \_\
+ *     ____ ___ ____  ____  _        _ __   __
+ *    |  _ |_ _/ ___||  _ \| |      / \\ \ / /
+ *    | | | | |\___ \| |_) | |     / _ \\ V /
+ *    | |_| | | ___) |  __/| |___ / ___ \| |
+ *    |____|___|____/|_|   |_____/_/   \_|_|
  *
  ******************************************************************************/
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef INC_PWR_H_
-#define INC_PWR_H_
+#ifndef INC_DISPLAY_H_
+#define INC_DISPLAY_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -31,15 +31,8 @@ extern "C" {
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
-#include "main.h"
-#include "stm32g4xx_hal.h"
-
+#include "st7789.h"
 /* Exported constants --------------------------------------------------------*/
-
-#define BATTERY_VOLT_FACTOR			(00.004589)
-#define BATTERY_CURR_FACTOR			(00.014648)
-#define POWER_VOLT_FACTOR			(25.801574)
-#define POWER_CURR_FACTOR			(00.014648)
 
 /* Exported macro ------------------------------------------------------------*/
 
@@ -47,17 +40,14 @@ extern "C" {
 
 /* Exported prototypes -------------------------------------------------------*/
 
-bool pwr_init(void);
-void pwr_set_gate_driver_on(void);
-void pwr_set_gate_driver_off(void);
-bool pwr_get_gate_driver_state(void);
-void pwr_run(void);
-void pwr_adc_update(uint16_t *adc_raw);
-bool pwr_get_state(void);
-float pwr_get_volt(void);
-float pwr_get_curr(void);
+void display_init(void);
+void display_run(void);
+void display_update(void);
+void display_write_header(void);
+void display_write_volt(void);
+void display_write_curr(void);
+void display_write_state(void);
 
-#endif /* INC_PWR_H_ */
-
+#endif /* INC_DISPLAY_H_ */
 
 /************************ (C) COPYRIGHT Heimdall *****************END OF FILE****/
