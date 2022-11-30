@@ -28,6 +28,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "pwr.h"
+#include "display.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -100,6 +101,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   pwr_set_gate_driver_off();
   //pwr_init();
+ // display_init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
