@@ -27,7 +27,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "pwr.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -89,24 +89,24 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-//  MX_DMA_Init();
-//  MX_TIM1_Init();
-//  MX_ADC1_Init();
-//  MX_USART1_UART_Init();
-//  MX_SPI1_Init();
-//  MX_TIM3_Init();
-//  MX_TIM6_Init();
-//  MX_TIM4_Init();
+  MX_DMA_Init();
+  MX_TIM1_Init();
+  MX_ADC1_Init();
+  MX_USART1_UART_Init();
+  MX_SPI1_Init();
+  MX_TIM3_Init();
+  MX_TIM6_Init();
+  MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
-  HAL_GPIO_WritePin(PWR_SD_GPIO_Port, PWR_SD_Pin, GPIO_PIN_RESET);
+  pwr_set_gate_driver_off();
+  //pwr_init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  HAL_GPIO_TogglePin(LD1_GPIO_Port, LD1_Pin);
-	  HAL_Delay(500);
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
