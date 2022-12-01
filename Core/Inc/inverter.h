@@ -34,6 +34,7 @@ extern "C" {
 #include "main.h"
 #include "dma.h"
 #include "tim.h"
+#include <math.h>
 
 /* Exported constants --------------------------------------------------------*/
 
@@ -48,6 +49,8 @@ void inverter_run(void);
 void inverter_start(void);
 void inverter_stop(void);
 void inverter_err(void);
+void inverter_beep_on(uint32_t beep_on_time);
+void inverter_beep_off(uint32_t beep_off_time);
 
 #endif /* INC_INVERTER_H_ */
 

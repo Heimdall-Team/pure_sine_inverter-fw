@@ -27,13 +27,16 @@
 #include <string.h>
 
 /* Private defines------------------------------------------------------------*/
-#define ST7789_BOOT_TIME 3000
+#define ST7789_BOOT_TIME (3000)
+#define TEMP_OFFSET		 (0.5)
 /* Private typedef -----------------------------------------------------------*/
 
 typedef struct
 {
 	float volt;
 	float curr;
+	float temp;
+	float old_temp;
 	bool inv_state;
 	char disp_buffer[6];
 
@@ -57,6 +60,8 @@ void display_init(void)
 	/* init all off */
 	idisp.volt = 0x00;
 	idisp.curr = 0x00;
+	idisp.temp = 0x00;
+	idisp.old_temp = 0x00;
 	idisp.inv_state = false;
 
 	/* clear buffer */
@@ -71,7 +76,7 @@ void display_init(void)
 	display_write_volt();
 	display_write_curr();
 	display_write_state();
-
+	display_write_temp();
 }
 
 /**
@@ -81,10 +86,11 @@ void display_init(void)
  */
 void display_run(void)
 {
-
+	display_update();
 	display_write_volt();
 	display_write_curr();
 	display_write_state();
+	display_write_temp();
 
 }
 
@@ -98,7 +104,27 @@ void display_update(void)
 	idisp.volt = pwr_get_volt();
 	idisp.curr = pwr_get_curr();
 	idisp.inv_state = pwr_get_state();
+	idisp.temp = pwr_get_temp();
 
+}
+
+void display_write_temp(void)
+{
+	/* clear buffer */
+	memset((void*) idisp.disp_buffer, 0x00, sizeof(idisp.disp_buffer));
+
+	if ( idisp.temp > (idisp.old_temp + TEMP_OFFSET) )
+	{
+
+	/* clear buffer */
+	sprintf(idisp.disp_buffer, "%.2f", idisp.temp);
+
+	ST7789_WriteString(0, 222, idisp.disp_buffer, Font_11x18, MAGENTA, BLACK);
+
+	/* update old temp value */
+	idisp.old_temp = idisp.temp;
+
+	}
 }
 
 /**
@@ -126,7 +152,7 @@ void display_write_volt(void)
 	memset((void*) idisp.disp_buffer, 0x00, sizeof(idisp.disp_buffer));
 
 	/* clear buffer */
-	sprintf(idisp.disp_buffer,"%.2f",idisp.volt);
+	sprintf(idisp.disp_buffer,"%.1f",idisp.volt);
 
 	ST7789_WriteString(32, 90, "VOLT:", Font_16x26, YELLOW, BLACK);
 	ST7789_WriteString(112, 90,idisp.disp_buffer, Font_16x26, YELLOW, BLACK);
@@ -142,7 +168,12 @@ void display_write_curr(void)
 	/* clear buffer */
 	memset((void*) idisp.disp_buffer, 0x00, sizeof(idisp.disp_buffer));
 
-	/* clear buffer */
+	if(idisp.curr < 0)
+	{
+		idisp.curr = 0;
+	}
+
+	/* convert float to array */
 	sprintf(idisp.disp_buffer,"%.2f",idisp.curr);
 
 	ST7789_WriteString(32, 120, "CURR:", Font_16x26, CYAN, BLACK);

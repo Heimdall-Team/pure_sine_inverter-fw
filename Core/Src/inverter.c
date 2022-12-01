@@ -183,6 +183,14 @@ void inverter_init(void)
 	/* initialize gate driver off to avoid power out */
 	pwr_set_gate_driver_off();
 
+	/* inverter start up sound indicator*/
+	inverter_beep_on(500);
+	inverter_beep_off(500);
+	inverter_beep_on(500);
+	inverter_beep_off(500);
+	inverter_beep_on(2000);
+	inverter_beep_off(10);
+
 	/* initialize display module */
 	display_init();
 
@@ -192,6 +200,12 @@ void inverter_init(void)
 		inverter_err();
 	}
 
+}
+
+void inverter_run(void)
+{
+	pwr_run();
+	display_run();
 }
 
 /**
@@ -267,7 +281,31 @@ void inverter_err(void)
 	while ( 1 )
 	{
 		display_write_err();
+		inverter_beep_on(250);
+		inverter_beep_off(250);
 	}
+}
+
+/**
+ * @brief turn on the beep.
+ *
+ * @return none.
+ */
+void inverter_beep_on(uint32_t beep_on_time)
+{
+	HAL_GPIO_WritePin(BUZZER_GPIO_Port, BUZZER_Pin, GPIO_PIN_SET);
+	HAL_Delay(beep_on_time);
+}
+
+/**
+ * @brief turn off the beep.
+ *
+ * @return none.
+ */
+void inverter_beep_off(uint32_t beep_off_time)
+{
+	HAL_GPIO_WritePin(BUZZER_GPIO_Port, BUZZER_Pin, GPIO_PIN_RESET);
+	HAL_Delay(beep_off_time);
 }
 
 /************************ (C) COPYRIGHT Heimdall *****************END OF FILE****/

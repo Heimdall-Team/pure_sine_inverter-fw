@@ -48,6 +48,7 @@ void display_write_volt(void);
 void display_write_curr(void);
 void display_write_state(void);
 void display_write_err(void);
+void display_write_temp(void);
 
 #endif /* INC_DISPLAY_H_ */
 

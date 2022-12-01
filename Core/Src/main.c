@@ -106,10 +106,9 @@ int main(void)
   MX_TIM6_Init();
   MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
-
+  pwr_set_gate_driver_off();
   /* initialize inverter application */
- // inverter_init();
-
+  inverter_init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -117,9 +116,8 @@ int main(void)
   while (1)
   {
 
-
-	 /* run inverter application */
-	// inverter_run();
+	   /* run inverter application */
+	 inverter_run();
 
     /* USER CODE END WHILE */
 

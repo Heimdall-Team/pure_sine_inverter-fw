@@ -39,6 +39,9 @@
 #define POWER_CURR_MAX				(2.0)
 #define POWER_CURR_MIN				(0.0)
 #define CURRENT_OFFSET				(2047)
+#define TEMPERATURE_MIN				(35.0)
+#define TEMPERATURE_MAX				(85.0)
+#define NTC_UP_R 					(10000.0f)     /* R1 resistance */
 
 
 /* Private typedef -----------------------------------------------------------*/
@@ -57,6 +60,9 @@ typedef struct
 	float bat_curr;
 	float pwr_volt;
 	float pwr_curr;
+	float temp_a;
+	float temp_b;
+	float temp_total;
 	uint16_t buffer[ADC_BUFFER_SIZE];
 	inverter_power_state inv_state;
 	inverter_power_state pwr_state;
@@ -68,6 +74,14 @@ typedef struct
 /* Private variables ---------------------------------------------------------*/
 
 inverter_power_typedef hinv;
+
+uint16_t ntc_r;
+
+
+/* constants of Steinhart-Hart equation */
+#define A 0.0008736528f
+#define B 0.000253893f
+#define C 0.0000001816f
 
 /* Private functions ---------------------------------------------------------*/
 
@@ -125,7 +139,8 @@ bool pwr_init(void)
 		hinv.inv_state = inv_pwr_ok;
 
 		/* start inverter */
-		inverter_start();
+	//	inverter_start();
+
 		return hinv.inv_state;
 	}
 
@@ -142,6 +157,9 @@ void pwr_run(void)
 
 	if ( hinv.inv_state == inv_pwr_ok )
 	{
+		/* read temperature from ntc */
+		pwr_read_temp();
+
 		/* check battery voltage level */
 		if ( hinv.bat_volt > BATTERY_VOLT_MIN && hinv.bat_volt < BATTERY_VOLT_MAX )
 		{
@@ -150,8 +168,16 @@ void pwr_run(void)
 		else
 		{
 			hinv.bat_state = inv_pwr_err;
-			pwr_set_gate_driver_off();
 			hinv.inv_state = inv_pwr_err;
+
+			/* gate drive off */
+			pwr_set_gate_driver_off();
+
+			/* stop inverter application*/
+			inverter_stop();
+
+			/* entry in catastrophic state*/
+			inverter_err();
 		}
 
 		/* check battery current level */
@@ -162,8 +188,36 @@ void pwr_run(void)
 		else
 		{
 			hinv.bat_state = inv_pwr_err;
-			pwr_set_gate_driver_off();
 			hinv.inv_state = inv_pwr_err;
+
+			/* gate drive off */
+			pwr_set_gate_driver_off();
+
+			/* stop inverter application*/
+			inverter_stop();
+
+			/* entry in catastrophic state*/
+			inverter_err();
+		}
+
+		if(hinv.temp_total > TEMPERATURE_MIN && hinv.temp_total < TEMPERATURE_MAX)
+		{
+			/* start cooling */
+			pwr_start_cooling();
+		}
+		else if(hinv.temp_total > TEMPERATURE_MAX)
+		{
+			pwr_stop_cooling();
+
+			/* gate drive off */
+			pwr_set_gate_driver_off();
+
+			/* stop inverter application*/
+			inverter_stop();
+
+			/* entry in catastrophic state*/
+			inverter_err();
+
 		}
 
 		/* check power out voltage level */
@@ -174,8 +228,16 @@ void pwr_run(void)
 		else
 		{
 			hinv.pwr_state = inv_pwr_err;
-			pwr_set_gate_driver_off();
 			hinv.inv_state = inv_pwr_err;
+
+			/* gate drive off */
+			pwr_set_gate_driver_off();
+
+			/* stop inverter application*/
+			inverter_stop();
+
+			/* entry in catastrophic state*/
+			inverter_err();
 		}
 
 		/* check power out current level */
@@ -185,9 +247,19 @@ void pwr_run(void)
 		}
 		else
 		{
+
 			hinv.pwr_state = inv_pwr_err;
-			pwr_set_gate_driver_off();
 			hinv.inv_state = inv_pwr_err;
+
+			/* gate drive off */
+			pwr_set_gate_driver_off();
+
+			/* stop inverter application*/
+			inverter_stop();
+
+			/* entry in catastrophic state*/
+			inverter_err();
+
 		}
 	}
 }
@@ -199,7 +271,7 @@ void pwr_run(void)
  */
 void pwr_set_gate_driver_on(void)
 {
-	HAL_GPIO_WritePin(PWR_SD_GPIO_Port, PWR_SD_Pin, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(PWR_SD_GPIO_Port, PWR_SD_Pin, GPIO_PIN_RESET);
 }
 
 /**
@@ -247,7 +319,7 @@ bool pwr_get_state(void)
  */
 float pwr_get_volt(void)
 {
-	return hinv.pwr_volt;
+	return hinv.bat_volt;
 }
 
 
@@ -258,9 +330,72 @@ float pwr_get_volt(void)
  */
 float pwr_get_curr(void)
 {
-	return hinv.pwr_curr;
+	return hinv.bat_curr;
 }
 
+/**
+ * @brief gets the current value of temperature.
+ *
+ * @return temperature of the inverter.
+ */
+float pwr_get_temp(void)
+{
+	return hinv.temp_total;
+}
+
+/**
+ * @brief turn on the fan.
+ *
+ * @return none.
+ */
+void pwr_start_cooling(void)
+{
+	TIM3->CCR1 = 90;
+	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
+}
+
+/**
+ * @brief turn off the fan.
+ *
+ * @return none.
+ */
+void pwr_stop_cooling(void)
+{
+	TIM3->CCR1 = 00;
+	HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_1);
+}
+
+
+/**
+ * @brief read the temperature from ntc sensors.
+ *
+ * @return none.
+ */
+void pwr_read_temp(void)
+{
+	float ntc_ln;
+
+	/* calc. ntc resistance 1 */
+	ntc_r = ((NTC_UP_R) / ((4095.0 / hinv.buffer[4]) - 1));
+
+	/* temp 1 */
+	ntc_ln = log(ntc_r);
+
+	/* calc. temperature */
+	hinv.temp_a = (1.0 / (A + B * ntc_ln + C * ntc_ln * ntc_ln * ntc_ln)) - 273.15;
+
+	/* calc. ntc resistance 1 */
+	ntc_r = ((NTC_UP_R) / ((4095.0 / hinv.buffer[5]) - 1));
+
+	/* temp 1 */
+	ntc_ln = log(ntc_r);
+
+	/* calc. temperature */
+	hinv.temp_b = (1.0 / (A + B * ntc_ln + C * ntc_ln * ntc_ln * ntc_ln)) - 273.15;
+
+	hinv.temp_total = (hinv.temp_a + hinv.temp_b) / 2;
+
+}
 
 /**
  * @brief update adc buffer for inverter power.
@@ -280,7 +415,7 @@ void pwr_adc_update(uint16_t *adc_raw)
 	hinv.bat_curr = (hinv.buffer[1] - CURRENT_OFFSET) * BATTERY_CURR_FACTOR;
 	hinv.pwr_volt = hinv.buffer[2] * POWER_VOLT_FACTOR;
 	hinv.pwr_curr = (hinv.buffer[3] - CURRENT_OFFSET) * POWER_CURR_FACTOR;
-
+	pwr_read_temp();
 }
 
 /************************ (C) COPYRIGHT Heimdall *****************END OF FILE****/

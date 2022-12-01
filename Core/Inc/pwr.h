@@ -33,6 +33,7 @@ extern "C" {
 #include <stddef.h>
 #include "main.h"
 #include "stm32g4xx_hal.h"
+#include "tim.h"
 
 /* Exported constants --------------------------------------------------------*/
 
@@ -56,7 +57,10 @@ void pwr_adc_update(uint16_t *adc_raw);
 bool pwr_get_state(void);
 float pwr_get_volt(void);
 float pwr_get_curr(void);
-
+float pwr_get_temp(void);
+void pwr_start_cooling(void);
+void pwr_stop_cooling(void);
+void pwr_read_temp(void);
 #endif /* INC_PWR_H_ */
 
 
